@@ -1,6 +1,8 @@
 # coordinates
 Coordinates mini app
 
-[![Watch the video]](https://github.com/mdanylch-dev/coordinates/raw/refs/heads/main/media/preview.mp4)
+## Preview
+app flow
 
-https://github.com/mdanylch-dev/coordinates/raw/refs/heads/main/media/preview.mp4
+<img src="https://github.com/mdanylch-dev/coordinates/blob/main/media/preview.gif"  width=70% height=70%>
+

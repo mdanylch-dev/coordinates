@@ -23,7 +23,6 @@ struct ForecastModel: Decodable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-//        let mainContainer = try decoder.container(keyedBy: MainKeys.self)
         let mainContainer = try container.nestedContainer(keyedBy: MainKeys.self, forKey: .main)
 
         pressureRaw = try mainContainer.decode(Int.self, forKey: .pressure)

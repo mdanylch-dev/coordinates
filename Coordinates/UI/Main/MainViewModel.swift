@@ -10,26 +10,14 @@ import Combine
 
 class MainViewModel: MainViewModelType {
 
-    let COORDINATE_SYMBOLS: String = #"^-?[0-9]*[.,]?[0-9]*$"#
+    let COORDINATE_SYMBOLS: String = #"^-?[0-9]{1,4}([.,][0-9]{0,30})?$"#
 
     private let cancelBag = CancelBag()
     private let weatherService = NetworkService()
 
     // Bindings
-    @Published var longitudeText = "" {
-        didSet {
-            let value = !longitudeText.isEmpty
-            isLongitudeValidationActive = value
-            isClearEnabled = value
-        }
-    }
-    @Published var latitudeText = "" {
-        didSet {
-            let value = !latitudeText.isEmpty
-            isLatitudeValidationActive = value
-            isClearEnabled = value
-        }
-    }
+    @Published var longitudeText = ""
+    @Published var latitudeText = ""
 
     // Outputs
     @Published private(set) var temperature: WeatherDetails?
@@ -41,6 +29,7 @@ class MainViewModel: MainViewModelType {
     @Published private(set) var isLoading: Bool = false
     @Published private var isLatitudeValidationActive: Bool = false
     @Published private var isLongitudeValidationActive: Bool = false
+    @Published private var isValidationActive: Bool = false
     @Published var latestValidation: Validation = .failure(message: "")
 
     lazy var latitudeLimitValidation: ValidationPublisher = {
@@ -52,7 +41,7 @@ class MainViewModel: MainViewModelType {
     }()
 
     lazy var latitudeSymbolsValidation: ValidationPublisher = {
-        return $longitudeText.validSymbolsValidator(COORDINATE_SYMBOLS, "Неправильно введені координати")
+        return $latitudeText.validSymbolsValidator(COORDINATE_SYMBOLS, "Неправильно введені координати")
     }()
 
     lazy var longitudeSymbolsValidation: ValidationPublisher = {
@@ -89,12 +78,14 @@ class MainViewModel: MainViewModelType {
     }()
 
     lazy var isAllValid: ValidationPublisher = {
-        Publishers.CombineLatest(longitudeValidation, latitudeValidation)
-            .map({ [weak self] long, lat in
+        Publishers.CombineLatest3(longitudeValidation, latitudeValidation, $isValidationActive)
+            .map({ [weak self] long, lat, isActive in
                 let isAllValid = [long, lat].allSatisfy { $0.isSuccess }
 
-                self?.isFetchEnabled = isAllValid
-                if isAllValid {
+                DispatchQueue.main.async {
+                    self?.isFetchEnabled = isAllValid && isActive
+                }
+                if isAllValid && isActive {
                     return .success
                 } else {
                     return [long, lat].first(where: { !$0.isSuccess }) ?? .success
@@ -104,7 +95,38 @@ class MainViewModel: MainViewModelType {
     }()
 
     // MARK: - Intialization
-    init() { }
+    init() {
+
+        $longitudeText
+            .throttle(for: .seconds(0.3), scheduler: DispatchQueue.main, latest: true)
+            .sink { [weak self] text in
+                guard let self else { return }
+                self.isLongitudeValidationActive = !text.isEmpty
+            }
+            .store(in: cancelBag)
+
+        $latitudeText
+            .throttle(for: .seconds(0.3), scheduler: DispatchQueue.main, latest: true)
+            .sink { [weak self] text in
+                guard let self else { return }
+                self.isLatitudeValidationActive = !text.isEmpty
+            }
+            .store(in: cancelBag)
+
+        Publishers.Merge($longitudeText, $latitudeText)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                isClearEnabled = !self.latitudeText.isEmpty || !self.longitudeText.isEmpty
+            }
+            .store(in: cancelBag)
+
+        Publishers.CombineLatest($longitudeText, $latitudeText)
+            .sink { [weak self] longField, latField in
+                guard let self else { return }
+                isValidationActive = !longField.isEmpty && !latField.isEmpty
+            }
+            .store(in: cancelBag)
+    }
 
     func fetchWeather() {
         isLoading = true

@@ -13,7 +13,7 @@ struct MainView<VM>: View where VM: MainViewModelType {
             case long, lat
     }
     @FocusState private var focusedField: Field?
-    @State private var latestValidation: Validation = .success
+    @State private var latestValidation: Validation = .failure(message: "")
 
     var body: some View {
         content
@@ -92,7 +92,7 @@ struct MainView<VM>: View where VM: MainViewModelType {
                     }
                     .build()
                 Spacer(minLength: 16)
-                ButtonBuilder(isActive: latestValidation.isSuccess)
+                ButtonBuilder(isActive: viewModel.isFetchEnabled)
                     .title("Застосувати")
                     .action {
                         focusedField = nil

@@ -18,6 +18,7 @@ class MainViewModel: MainViewModelType {
     // Bindings
     @Published var longitudeText = ""
     @Published var latitudeText = ""
+    @Published var isError: Bool = false
 
     // Outputs
     @Published private(set) var temperature: WeatherDetails?
@@ -133,15 +134,17 @@ class MainViewModel: MainViewModelType {
         let coordinates = "&lon=\(longitudeText)&lat=\(latitudeText)"
         weatherService.fetchWeather(for: coordinates)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
+                    self?.clearPrevious()
+                    self?.isError = true
                     print(error)
                 default:
                     break
                 }
             }, receiveValue: { [weak self] forecast in
-                guard let self = self else { return }
+                guard let self, isLoading else { return }
                 self.temperature = forecast.temperature
                 self.pressure = forecast.pressure
                 self.dewPoint = forecast.dewPoint
@@ -154,10 +157,16 @@ class MainViewModel: MainViewModelType {
     func clearFields() {
         longitudeText = ""
         latitudeText = ""
+        isClearEnabled = false
+        clearPrevious()
+    }
+
+    private func clearPrevious() {
         temperature = nil
         pressure = nil
         dewPoint = nil
         humidity = nil
+        isLoading = false
     }
 }
 
@@ -182,4 +191,5 @@ protocol MainViewModelType: ObservableObject {
     // Bindings
     var longitudeText: String { get set }
     var latitudeText: String { get set }
+    var isError: Bool { get  set }
 }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		187EBFF52D5F508500E597DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187EBFF42D5F508500E597DA /* AppDelegate.swift */; };
 		187EBFF72D5F508500E597DA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187EBFF62D5F508500E597DA /* SceneDelegate.swift */; };
-		187EBFFE2D5F508600E597DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187EBFFD2D5F508600E597DA /* Assets.xcassets */; };
 		187EC0012D5F508600E597DA /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 187EC0002D5F508600E597DA /* Base */; };
 		187EC0092D5F52DC00E597DA /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187EC0082D5F52DC00E597DA /* MainView.swift */; };
 		187EC00B2D5F594200E597DA /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187EC00A2D5F594200E597DA /* MainViewModel.swift */; };
@@ -31,6 +30,7 @@
 		187EC03A2D6237CC00E597DA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187EC0392D6237CC00E597DA /* Images.xcassets */; };
 		187EC03C2D62385B00E597DA /* ImagesKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187EC03B2D62385B00E597DA /* ImagesKit.swift */; };
 		187EC03E2D62447900E597DA /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187EC03D2D62447900E597DA /* Date+.swift */; };
+		187EC0402D62B9C500E597DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187EBFFD2D5F508600E597DA /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -277,9 +277,9 @@
 			files = (
 				187EC02D2D60A4AB00E597DA /* Roboto-SemiBold.ttf in Resources */,
 				187EC0172D5F8D6800E597DA /* ColorsKit.xcassets in Resources */,
-				187EBFFE2D5F508600E597DA /* Assets.xcassets in Resources */,
 				187EC02C2D60A4A700E597DA /* Roboto-Regular.ttf in Resources */,
 				187EC02B2D60A49E00E597DA /* Roboto-Bold.ttf in Resources */,
+				187EC0402D62B9C500E597DA /* Assets.xcassets in Resources */,
 				187EC03A2D6237CC00E597DA /* Images.xcassets in Resources */,
 				187EC0012D5F508600E597DA /* Base in Resources */,
 			);
@@ -448,6 +448,7 @@
 		187EC0062D5F508600E597DA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -475,6 +476,7 @@
 		187EC0072D5F508600E597DA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;

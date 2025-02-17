@@ -23,19 +23,18 @@ struct MainView<VM>: View where VM: MainViewModelType {
         VStack(spacing: 0) {
             inputCard
 
-            if viewModel.temperature != nil {
-                updateInfo
-                    .padding(.vertical, 8)
-
-                infoCard
-            } else if viewModel.isLoading {
+            if viewModel.isLoading {
                 ProgressView()
                     .progressViewStyle(.circular)
                     .padding(.top, 32)
-            } else {
+            } else if viewModel.temperature == nil {
                 Text("Оберіть координати")
                     .fontKit(style: .h2)
                     .padding(.top, 32)
+            } else {
+                updateInfo
+                    .padding(.vertical, 8)
+                infoCard
             }
             Spacer()
         }
@@ -91,6 +90,8 @@ struct MainView<VM>: View where VM: MainViewModelType {
                         viewModel.clearFields()
                     }
                     .build()
+                    .alert("Error", isPresented: $viewModel.isError, actions: { }, message: { Text("No internet connection") })
+
                 Spacer(minLength: 16)
                 ButtonBuilder(isActive: viewModel.isFetchEnabled)
                     .title("Застосувати")
@@ -104,6 +105,7 @@ struct MainView<VM>: View where VM: MainViewModelType {
                     })
             }
             .padding(.vertical, 16)
+
         }
         .padding()
         .background(ColorsKit.Surface.color)
